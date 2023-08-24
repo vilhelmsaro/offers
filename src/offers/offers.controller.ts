@@ -1,6 +1,8 @@
 import { Controller, Post, Param, Body } from '@nestjs/common';
 import { OfferServiceFactory } from './utils/offerServiceFactory';
 
+console.log('offerServiceFactory', OfferServiceFactory);
+
 @Controller('offers')
 export class OffersController {
   constructor(private readonly offerServiceFactory: OfferServiceFactory) {}
