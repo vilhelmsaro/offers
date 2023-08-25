@@ -6,7 +6,6 @@ import { OfferServiceFactory } from './utils/offerServiceFactory';
 console.log('HERE');
 @Module({
   controllers: [OffersController],
-  providers: [OffersService, OfferServiceFactory],
-  exports: [OffersService], // If you need to use OffersService in other modules
+  providers: [OfferServiceFactory],
 })
 export class OffersModule {}

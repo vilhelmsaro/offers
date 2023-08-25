@@ -3,7 +3,10 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { OfferEntity } from './entities/offer.entity';
 import { Offer1DTO, ProviderPayloadDTO } from './dto/offer1-dto';
-import { ProviderConfig } from './utils/offerServiceFactory';
+import {
+  OfferServiceFactory,
+  ProviderConfig,
+} from './utils/offerServiceFactory';
 
 @Injectable()
 export class OffersService {
@@ -11,9 +14,11 @@ export class OffersService {
 
   async transformAndSaveProviderPayload(
     providerName: string,
-    providerPayload: any,
+    providerPayload: Offer1DTO[],
   ) {
-    const validatedPayload = plainToClass(ProviderPayloadDTO, providerPayload);
+    console.log("providerPayload", providerPayload);
+    
+    const validatedPayload = providerPayload.map((offers) => plainToClass(Offer1DTO, offers));
     const validationErrors = await validate(validatedPayload);
 
     if (validationErrors.length > 0) {
@@ -21,9 +26,11 @@ export class OffersService {
       return;
     }
 
-    const offers = validatedPayload.offers.map((Offer1DTO) =>
-      this.transformOffer(this.providerConfig.transformationLogic, Offer1DTO),
+    console.log('validatedPayload', validatedPayload);
+    const offers = validatedPayload.map((validatedOffers) =>
+      this.transformOffer(this.providerConfig.transformationLogic, validatedOffers),
     );
+    console.log('offers after transform', offers);
 
     // await this.offerRepository.save(offers);
   }

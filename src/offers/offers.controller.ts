@@ -1,5 +1,6 @@
 import { Controller, Post, Param, Body } from '@nestjs/common';
 import { OfferServiceFactory } from './utils/offerServiceFactory';
+import { ProviderPayloadDTO } from './dto/offer1-dto';
 
 console.log('offerServiceFactory', OfferServiceFactory);
 
@@ -10,12 +11,15 @@ export class OffersController {
   @Post(':providerName')
   async processProviderPayload(
     @Param('providerName') providerName: string,
-    @Body() providerPayload: any,
+    @Body() providerPayload: ProviderPayloadDTO,
   ) {
+    console.log('providerPayload', providerPayload);
+
     const offerService = this.offerServiceFactory.createService(providerName);
+    
     await offerService.transformAndSaveProviderPayload(
       providerName,
-      providerPayload,
+      providerPayload.offers,// Offer1DTO[],
     );
     return { message: 'Payload processed successfully' };
   }
