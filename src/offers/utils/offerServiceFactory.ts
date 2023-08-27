@@ -2,10 +2,13 @@ import { OffersService } from '../offers.service';
 import { Injectable } from '@nestjs/common';
 import { Offer1DTO } from '../dto/offer1-dto';
 import { OfferEntity } from '../entities/offer.entity';
+import { providerNames } from '../../constants';
+import offerConvertors from '../utils/offerConvertors';
+import allOffersPayloads from '../dto/offersPayloads';
 
 export interface ProviderConfig {
-  validationRules: any[];
   transformationLogic: (offer: Offer1DTO) => Partial<OfferEntity>;
+  payloadDTO: object;
 }
 
 @Injectable()
@@ -14,18 +17,13 @@ export class OfferServiceFactory {
 
   constructor() {
     // Load provider configurations and register them in the map
-    this.providers.set('provider1', {
-      validationRules: [], // Define validation rules
-      transformationLogic: (offer: Offer1DTO) => {
-        // Implement transformation logic for provider1
-        return {
-          externalOfferId: offer.offer_id,
-          name: offer.offer_name,
-        };
-      },
-    });
 
-    // Register other providers
+    providerNames.forEach((provider) => {
+      this.providers.set(provider, {
+        transformationLogic: offerConvertors[provider],
+        payloadDTO: allOffersPayloads[provider],
+      });
+    });
   }
 
   createService(providerName: string): OffersService {

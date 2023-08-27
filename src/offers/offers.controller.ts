@@ -1,6 +1,10 @@
-import { Controller, Post, Param, Body } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { OfferServiceFactory } from './utils/offerServiceFactory';
-import { ProviderPayloadDTO } from './dto/offer1-dto';
+import { providerNames } from '../constants';
+import { getAllResponses } from './utils/getAllOffers';
+import { plainToInstance } from 'class-transformer';
+import { validateSync } from 'class-validator';
+import AllProviderPayloads from './dto/offersPayloads';
 
 console.log('offerServiceFactory', OfferServiceFactory);
 
@@ -8,19 +12,34 @@ console.log('offerServiceFactory', OfferServiceFactory);
 export class OffersController {
   constructor(private readonly offerServiceFactory: OfferServiceFactory) {}
 
-  @Post(':providerName')
-  async processProviderPayload(
-    @Param('providerName') providerName: string,
-    @Body() providerPayload: ProviderPayloadDTO,
-  ) {
-    console.log('providerPayload', providerPayload);
+  @Post('')
+  async processProviderPayload() {
+    // calling mock service
+    const allOffers = await getAllResponses(providerNames);
+    console.log('allOffers', allOffers);
 
-    const offerService = this.offerServiceFactory.createService(providerName);
-    
-    await offerService.transformAndSaveProviderPayload(
-      providerName,
-      providerPayload.offers,// Offer1DTO[],
-    );
+    // process the responses
+    providerNames.forEach((providerName) => {
+      const offerService = this.offerServiceFactory.createService(providerName);
+
+      // validate the payloads
+      const validatedPayload = plainToInstance(
+        AllProviderPayloads[providerName],
+        allOffers[providerName],
+      );
+      const validationErrors = validateSync(validatedPayload); //if this is a simple validation of properties and their types, we don't need async validation
+
+      if (validationErrors.length > 0) {
+        console.warn('Validation error:', validationErrors);
+        return;
+      }
+
+      offerService.transformAndSaveProviderPayload(
+        providerName,
+        validatedPayload,
+      );
+    });
+
     return { message: 'Payload processed successfully' };
   }
 }
