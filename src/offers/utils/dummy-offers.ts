@@ -145,7 +145,7 @@ export const offer2InvalidPayload = {
   data: {
     // offers from offer2 provider
     '15828': {
-      Offer: {value: 1},
+      Offer: { offer_desc: '1' },
     },
   },
 };

@@ -8,6 +8,7 @@ import {
   IsUrl,
   ValidateNested,
 } from 'class-validator';
+import { ValidateDynamicProperty } from '../utils/ValidateDynamicProperty';
 
 export class Offer {
   @IsNotEmpty()
@@ -20,10 +21,6 @@ export class Offer {
 
   @IsNotEmpty()
   @IsString()
-  offer_desc: string;
-
-  @IsNotEmpty()
-  @IsString()
   icon: string;
 
   @IsNotEmpty()
@@ -31,7 +28,7 @@ export class Offer {
   tracking_url: string;
 
   @IsNotEmpty()
-  @IsUrl()
+  @IsString()
   instructions: string;
 
   @IsNotEmpty()
@@ -74,5 +71,6 @@ export class Provider2PayloadDTO {
   @IsNotEmptyObject()
   @ValidateNested({ each: true })
   @Type(() => Data)
+  @ValidateDynamicProperty()
   data: Data;
 }

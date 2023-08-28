@@ -13,9 +13,11 @@ export class OffersController {
   @Post('')
   async processProviderPayload() {
     // calling mock service
-    const allOffers = await getAllResponses(providerNames);
+    const allOffers = await getAllResponses(providerNames, true);
     // process the responses
     providerNames.forEach((providerName) => {
+      console.log('WORKING ON ', providerName);
+      
       const offerService = this.offerServiceFactory.createService(providerName);
 
       // validate the payloads before getting to services
