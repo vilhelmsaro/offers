@@ -1,17 +1,15 @@
 import { OffersService } from '../offers.service';
-import { Injectable } from '@nestjs/common';
-import { Offer1DTO } from '../dto/offer1-dto';
 import { OfferEntity } from '../entities/offer.entity';
 import { providerNames } from '../../constants';
 import offerConvertors from '../utils/offerConvertors';
-import allOffersPayloads from '../dto/offersPayloads';
+import { allOffersPayloads, AllOfferIterables } from '../dto/offersPayloads';
 
 export interface ProviderConfig {
-  transformationLogic: (offer: Offer1DTO) => Partial<OfferEntity>;
+  transformationLogic: (offer) => Partial<OfferEntity>;
   payloadDTO: object;
+  getIterableOffers: (payload) => AllOfferIterables;
 }
 
-@Injectable()
 export class OfferServiceFactory {
   private providers: Map<string, ProviderConfig> = new Map();
 
@@ -22,6 +20,7 @@ export class OfferServiceFactory {
       this.providers.set(provider, {
         transformationLogic: offerConvertors[provider],
         payloadDTO: allOffersPayloads[provider],
+        getIterableOffers: allOffersPayloads[provider].getIterableOffers,
       });
     });
   }

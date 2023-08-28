@@ -1,1 +1,1 @@
-export const providerNames: string[] = ['offer1', 'offer2'];
+export const providerNames = ['offer1', 'offer2'];

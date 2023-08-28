@@ -5,7 +5,7 @@ export function getAllResponses(offerNames, errorFlag = false) {
   return new Promise((resolve) => {
     if (errorFlag) {
       return resolve({
-        offer1: allOffers.offer1,
+        offer1: allOffers.offer1Invalid,
         offer2: allOffers.offer2Invalid,
       });
     }

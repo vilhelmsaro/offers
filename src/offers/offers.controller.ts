@@ -4,9 +4,7 @@ import { providerNames } from '../constants';
 import { getAllResponses } from './utils/getAllOffers';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
-import AllProviderPayloads from './dto/offersPayloads';
-
-console.log('offerServiceFactory', OfferServiceFactory);
+import { allOffersPayloads } from './dto/offersPayloads';
 
 @Controller('offers')
 export class OffersController {
@@ -16,30 +14,27 @@ export class OffersController {
   async processProviderPayload() {
     // calling mock service
     const allOffers = await getAllResponses(providerNames);
-    console.log('allOffers', allOffers);
-
     // process the responses
     providerNames.forEach((providerName) => {
       const offerService = this.offerServiceFactory.createService(providerName);
 
-      // validate the payloads
-      const validatedPayload = plainToInstance(
-        AllProviderPayloads[providerName],
+      // validate the payloads before getting to services
+      const payload = plainToInstance(
+        allOffersPayloads[providerName].payloadDTO,
         allOffers[providerName],
       );
-      const validationErrors = validateSync(validatedPayload); //if this is a simple validation of properties and their types, we don't need async validation
+
+      // validateSync - as we do not have any custom async validation logic
+      const validationErrors = validateSync(payload);
 
       if (validationErrors.length > 0) {
-        console.warn('Validation error:', validationErrors);
+        console.warn(`Invalid response by provider: ${providerName}`);
         return;
       }
 
-      offerService.transformAndSaveProviderPayload(
-        providerName,
-        validatedPayload,
-      );
+      offerService.transformAndSaveProviderPayload(payload);
     });
 
-    return { message: 'Payload processed successfully' };
+    return { message: 'Payloads processed.' };
   }
 }

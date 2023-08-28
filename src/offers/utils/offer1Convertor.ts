@@ -1,4 +1,5 @@
 import { Offer1DTO } from '../dto/offer1-dto';
+//todo add constants with desktop and etc.
 
 export function offer1Convertor(offer: Offer1DTO) {
   // Implement transformation logic for provider1

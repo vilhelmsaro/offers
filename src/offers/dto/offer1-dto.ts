@@ -1,6 +1,8 @@
 import {
+  ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
+  IsNumber,
   IsObject,
   IsString,
   IsUrl,
@@ -48,10 +50,9 @@ class Query {
   pubid: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   appid: number;
 
-  @IsNotEmpty()
   @IsString()
   country: string;
 
@@ -60,12 +61,20 @@ class Query {
   platform: string;
 }
 
-export class Provider1PayloadDTO {
-  @IsNotEmpty()
+class Response {
+  @ArrayNotEmpty()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => Offer1DTO)
   offers: Offer1DTO[];
+}
+
+export class Provider1PayloadDTO {
+  @IsNotEmpty()
+  @IsObject()
+  @ValidateNested({ each: true })
+  @Type(() => Response)
+  response: Response;
 
   @IsNotEmpty()
   @IsObject()

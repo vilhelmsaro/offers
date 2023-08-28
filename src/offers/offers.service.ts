@@ -6,18 +6,16 @@ import { ProviderConfig } from './utils/offerServiceFactory';
 export class OffersService {
   constructor(private readonly providerConfig: ProviderConfig) {}
 
-  transformAndSaveProviderPayload(providerName: string, providerPayload) {
-    console.log('providerPayload', providerPayload);
-
-    const offers = providerPayload.offers.map((validatedOffers) =>
-      this.transformOffer(
-        this.providerConfig.transformationLogic,
-        validatedOffers,
-      ),
-    );
-    console.log('offers after transform', offers);
-
-    // await this.offerRepository.save(offers);
+  transformAndSaveProviderPayload(providerPayload) {
+    const offers = this.providerConfig
+      .getIterableOffers(providerPayload)
+      .map((validatedOffers) => {
+        return this.transformOffer(
+          this.providerConfig.transformationLogic,
+          validatedOffers,
+        );
+      });
+    console.log('offers after transformation: ', offers);
   }
 
   private transformOffer(
