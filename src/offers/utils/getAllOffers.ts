@@ -7,8 +7,13 @@ export function getAllResponses(offerNames, errorFlag = false) {
       return resolve({
         offer1: allOffers.offer1Invalid,
         offer2: allOffers.offer2Invalid,
+        offer3: allOffers.offer3Invalid,
       });
     }
-    resolve({ offer1: allOffers.offer1, offer2: allOffers.offer2 });
+    resolve({
+      offer1: allOffers.offer1,
+      offer2: allOffers.offer2,
+      offer3: allOffers.offer3,
+    });
   });
 }

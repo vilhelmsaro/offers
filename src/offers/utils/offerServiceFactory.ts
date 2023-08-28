@@ -1,8 +1,11 @@
 import { OffersService } from '../offers.service';
 import { OfferEntity } from '../entities/offer.entity';
-import { providerNames } from '../../constants';
 import offerConvertors from '../utils/offerConvertors';
-import { allOffersPayloads, AllOfferIterables } from '../dto/offersPayloads';
+import {
+  allOffersPayloads,
+  AllOfferIterables,
+  providerNames,
+} from '../dto/offersPayloads';
 
 export interface ProviderConfig {
   transformationLogic: (offer) => Partial<OfferEntity>;

@@ -1,8 +1,8 @@
 {
   "name": "offer-service-app",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "a scalable app to convert multiple object types into one specific entry.",
+  "author": "Saro",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

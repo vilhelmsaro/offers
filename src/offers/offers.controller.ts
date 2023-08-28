@@ -1,10 +1,9 @@
 import { Controller, Post } from '@nestjs/common';
 import { OfferServiceFactory } from './utils/offerServiceFactory';
-import { providerNames } from '../constants';
 import { getAllResponses } from './utils/getAllOffers';
 import { plainToInstance } from 'class-transformer';
 import { validateSync } from 'class-validator';
-import { allOffersPayloads } from './dto/offersPayloads';
+import { allOffersPayloads, providerNames } from './dto/offersPayloads';
 
 @Controller('offers')
 export class OffersController {
@@ -13,11 +12,12 @@ export class OffersController {
   @Post('')
   async processProviderPayload() {
     // calling mock service
-    const allOffers = await getAllResponses(providerNames, true);
+    // if you want to pass invalid data to the services, simply add 'true' as a second argument to the function below -> 'getAllResponses'
+    const allOffers = await getAllResponses(providerNames);
+
     // process the responses
     providerNames.forEach((providerName) => {
       console.log('WORKING ON ', providerName);
-      
       const offerService = this.offerServiceFactory.createService(providerName);
 
       // validate the payloads before getting to services
@@ -34,7 +34,7 @@ export class OffersController {
         return;
       }
 
-      offerService.transformAndSaveProviderPayload(payload);
+      offerService.transformAndSaveProviderPayload(payload, providerName);
     });
 
     return { message: 'Payloads processed.' };
