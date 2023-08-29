@@ -30,7 +30,7 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
-In order to test the app, simply call the API 'localhost:3000/offers', and look at the logs the application produces. It will by default run on the valid samples of a few offers, if you want to test it by giving invalid payloads, have a look at the comments in the [# offers.controller.ts](https://github.com/vilhelmsaro/offers/blob/main/src/offers/offers.controller.ts) file.
+In order to test the app, simply call the API 'localhost:3000/offers', and look at the logs the application produces. It will by default run on the valid samples of a few offers, if you want to test it by giving invalid payloads, have a look at the comments in the [offers.controller.ts](https://github.com/vilhelmsaro/offers/blob/main/src/offers/offers.controller.ts) file.
 
 ## License
 
